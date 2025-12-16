@@ -97,6 +97,8 @@ PS2EXE can be used with Powershell Core. To do so just install the module PS2EXE
 
 **For this reason PS2EXE can only compile Powershell 5.1 compatible scripts and generates .Net 4.x binaries, but can still be used directly on every supported Windows OS without dependencies.**
 
+There is at least one unaffiliated community project to make it possible to compile binaries with Powershell Core called [PS2EXE.Core](https://github.com/FabienTschanz/PS2EXE.Core). 
+
 ### Embedding files in compiled executables:
 With the parameter *-embedFiles* followed by a hash table with paths to files those files will be embedded in the compiled executable.
 At startup of the executable those files will be written to disk to the specified paths, e.g. *-embedFiles @{'Targetfilepath1'='Sourcefilepath1';'Targetfilepath2'='Sourcefilepath2'}*.
@@ -109,6 +111,9 @@ The basic input/output commands had to be rewritten in C# for PS2EXE. Not implem
 
 ### GUI mode output formatting:
 By default in powershell outputs of commandlets are formatted line per line (as an array of strings). When your command generates 10 lines of output and you use GUI output, 10 message boxes will appear each awaiting for an OK. To prevent this pipe your commandto the comandlet Out-String. This will convert the output to one string array with 10 lines, all output will be shown in one message box (for example: dir C:\ | Out-String).
+
+### Output streams
+A compiled script can still use cmdlets that write to all the [output streams](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_output_streams), however, they are ultimately routed to the console via stdout. This means that any `Write-Host`, `Write-Verbose`, or other output stream operations will be relayed via stdout (and also pollute the stdout stream). 
 
 ### Config files:
 PS2EXE can create config files with the name of the generated executable + ".config". In most cases those config files are not necessary, they are a manifest that tells which .Net Framework version should be used. As you will usually use the actual .Net Framework, try running your excutable without the config file.
